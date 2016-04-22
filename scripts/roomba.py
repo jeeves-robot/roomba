@@ -19,7 +19,6 @@ pub = rospy.Publisher(topic, Twist, queue_size=5)
 # Randomly choose a direction
 def changeDirection(bump):
     global bumped
-    print "Change direction!"
     bumped = True
 
 def rotate():
@@ -33,6 +32,7 @@ def rotate():
         twist.angular.x = 0
         pub.publish(twist)
         time.sleep(.02)
+    angle = random.uniform(-2, 2)
     for i in range(50):
         twist.linear.x = -0.05
         twist.angular.z = 2
@@ -53,19 +53,16 @@ def move_forward():
     time.sleep(0.2)
 
 
-if __name__ == "__main__": 
-    print "Starting main"
+if __name__ == "__main__":
     rospy.init_node('turtlebot_roomba')
  
     # Subscribe to topic /mobile_base/events/bumper
     # to get notifications when we bump into things.
     sub = rospy.Subscriber('mobile_base/events/bumper', BumperEvent, changeDirection)
-    print "Starting while loop"
 
     try: 
         while(1):
             if bumped is True:
-                print("Bumped!")
                 rotate()
             else:
                 move_forward()
